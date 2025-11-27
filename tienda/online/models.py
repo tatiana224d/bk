@@ -15,11 +15,30 @@ class pedidos(models.Model):
     def __str__(self):
         return self.nombre
     
-class catalogo(models.Model):
+class categoria(models.Model):
+    nombre_categoria = models.CharField(max_length=120)
+    slug=models.SlugField()
+
+    def __str__(self):
+        return self.nombre_categoria   
+     
+class producto(models.Model):
     nombre_producto = models.CharField(max_length=120)
     descripcion_producto = models.TextField(max_length=250)
     imagen_producto = models.ImageField(upload_to='product_images/')
-    precio_producto = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_producto = models.DecimalField(max_digits=10, decimal_places=2) 
+    categoria = models.ForeignKey(categoria, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre_producto
+
+class insumos(models.Model):
+    nombre_insumo = models.CharField(max_length=120)
+    tipo_insumo = models.CharField(max_length=120)
+    cantidad_disponible = models.PositiveIntegerField()
+    unidad_medida = models.CharField(max_length=50, blank=True)
+    marca_insumo = models.CharField(max_length=120)
+    color_insumo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre_insumo
