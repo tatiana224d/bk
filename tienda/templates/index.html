@@ -1,7 +1,8 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
     <head>
-        <title>Title</title>
+        <title>tienda</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
@@ -21,22 +22,45 @@
     <body class="container mt-3">
         <header>
             <div class="alert alert-info display-5 text-center" role="alert">
-            Solicitud Pedidos
+            tienda online
             </div>
         </header>
+        {% if productos %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for producto in productos %}
+            <div class="col">
+                <div class="card h-100">
+                    <img
+                        src="{{ producto.imagen_producto.url }}"
+                        class="card-img-top"
+                        alt="{{ producto.nombre_producto }}"
+                    />
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                        <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
+                        <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
+                    </div> 
+                </div>
+            </div>      
+            {% endfor %} 
+        </div>
+        {% else %}     
+        <p>No hay productos disponibles.</p>   
+            {% endif %}
+        <a
+            name=""
+            id=""
+            class="btn btn-primary"
+            href="#"
+            role="button"
+            >Button</a
+        >
+        
 
         <main>
-            {% if pedidos %}
-            TODO: Mostrar pedidos
-
-            {% else %}
-
-            <div class="alert alert-warning text-center" role="alert">
-                    No hay pedidos realizados
-            </div>
-
-            {% endif %}
+            
         </main>
+
 
         <footer>
             <!-- PARECE SER EL PIE DE PAGINA, AGREGAR DESPUES -->
