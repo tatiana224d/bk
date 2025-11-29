@@ -18,21 +18,25 @@
         />
     </head>
 
-    <body>
+    <body class="container mt-3">
         <header>
-            <!-- place navbar here -->
-        </header>
-        <main>
-            {% if pedidos %}
-            TODO: Mostrar pedidos
-
-            {% else %}
-
-            <div class="alert alert-warning text-center" role="alert">
-                    No hay pedidos realizados
+            <div class="alert alert-info display-5 text-center" role="alert">
+            Solicitud de pedido
             </div>
 
-            {% endif %}
+        </header>
+        <main>
+
+            <form method="post" enctype="multipart/form-data">
+>
+                {% csrf_token %}
+                {{form.as_p}}
+
+                <a class = "btn btn-primary mt-3" href="/" role="button">Cancelar</a>
+                <button type="submit" class="btn btn-danger float-end mt-3">Enviar solicitud</button> 
+            </form>
+
+        
         </main>
         <footer>
             <!-- place footer here -->

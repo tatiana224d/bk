@@ -1,6 +1,7 @@
 from django.db import models
 
-# Create your models here.
+
+# Create your models here.  28:42
 
 class pedidos(models.Model):
     nombre = models.CharField(max_length=120)
@@ -21,7 +22,7 @@ class categoria(models.Model):
 
     def __str__(self):
         return self.nombre_categoria   
-     
+    
 class producto(models.Model):
     nombre_producto = models.CharField(max_length=120)
     descripcion_producto = models.TextField(max_length=250)
