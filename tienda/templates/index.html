@@ -25,25 +25,64 @@
             tienda online
             </div>
         </header>
-        {% if productos %}
+        {% if paginacion %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for producto in productos %}
-            <div class="col">
-                <div class="card h-100">
-                    <img
-                        src="{{ producto.imagen_producto.url }}"
-                        class="card-img-top"
-                        alt="{{ producto.nombre_producto }}"
-                    />
-                    <div class="card-body">
-                        <h5 class="card-title">{{ producto.nombre_producto }}</h5>
-                        <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
-                        <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
-                    </div> 
-                </div>
-            </div>      
+            {% for producto in paginacion %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if producto.imagen_producto %}
+                            <img src="{{ producto.imagen_producto.url }}" class="card-img-top" alt="{{ producto.nombre_producto }}" style="height: 200px; object-fit: cover;" />
+                        {% else %}
+                            <div class="card-img-top text-center py-5 bg-light" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <span>Sin imagen disponible</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                            <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
+                            <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
+                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-primary">Ver Detalles</a>
+                        </div> 
+                    </div>
+                </div>      
             {% endfor %} 
         </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if paginacion.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paginacion.previous_page_number }}">← Anterior</a>
+                    </li>
+                {% endif %}
+
+                {% for num in paginacion.paginator.page_range %}
+                    {% if paginacion.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if paginacion.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paginacion.next_page_number }}">Siguiente →</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paginacion.paginator.num_pages }}">Última</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
         {% else %}     
         <p>No hay productos disponibles.</p>   
             {% endif %}
@@ -51,10 +90,12 @@
             name=""
             id=""
             class="btn btn-primary"
-            href="#"
+            href="pedido/"
             role="button"
-            >Button</a
+            >Pedidos</a
         >
+        <a name="" id="" class="btn btn-secondary" href="seguimiento/" role="button">Seguimiento de pedidos</a>
+        
         
 
         <main>

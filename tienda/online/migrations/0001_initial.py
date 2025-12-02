@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('nombre', models.CharField(max_length=120)),
                 ('email', models.CharField(max_length=120)),
                 ('telefono', models.PositiveIntegerField(blank=True)),
+                ('token', models.CharField(default='', max_length=120)),
                 ('descripcion', models.TextField(blank=True, max_length=120)),
                 ('producto_ref', models.ImageField(upload_to='')),
                 ('recibido_de', models.CharField(max_length=120)),

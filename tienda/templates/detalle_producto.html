@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
     <head>
         <title>Title</title>
@@ -18,43 +19,27 @@
         />
     </head>
 
-    <body class="container mt-3">
+    <body>
         <header>
-            <div class="alert alert-info display-5 text-center">
-            Solicitud de pedido
-            </div>
-
+            <!-- place navbar here -->
         </header>
         <main>
-
-
-            <div class="container d-flex justify-content-center">
-                <div class="col-6">
-                    <div class="alert alert-info">
-                        <form method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% if form.errors %}
-                                <div class="alert alert-danger">
-                                    {{ form.errors }}
-                                </div>
-                            {% endif %}
-
-                            {{form.as_p}}
-                            <a class = "btn btn-primary mt-3" href="/" role="button">Cancelar</a>
-                            <button type="submit" class="btn btn-danger float-end mt-3">Pagar pedido</button> 
-                        </form>
-                    </div>
-                </div> 
+            <div class="container mt-3">
+                <div class="card mb-3">
+                    {% if producto.imagen_producto %}
+                        <img src="{{ producto.imagen_producto.url }}" class="card-img-top" alt="{{ producto.nombre_producto }}" style="height: 400px; object-fit: cover;" />
+                    {% else %}
+                        <div class="card-img-top text-center py-5 bg-light" style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                            <span>Sin imagen disponible</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="h1">{{ producto.nombre_producto }}</p>
+                <p class="h4">Precio: ${{ producto.precio_producto }}</p>
+                <p class="h5">Categoría: {{ producto.categoria.nombre_categoria }}</p> 
+                <p class="card-text">{{ producto.descripcion_producto }}</p>
+                <a href="/" class="btn btn-secondary mt-3">Volver al catálogo</a>
             </div>
-        <a
-            name=""
-            id=""
-            class="btn btn-dark mt-3"
-            href="/"
-            role="button"
-            >volver</a
-        >
-
         </main>
         <footer>
             <!-- place footer here -->

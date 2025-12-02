@@ -1,10 +1,11 @@
 from django.db import models
+from django.utils import timezone
 import uuid
 
-
-# Create your models here.  28:42
+# Create your models here.
 
 class pedidos(models.Model):
+
     nombre = models.CharField(max_length=120)
     email =models.CharField(max_length=120)
     telefono =models.PositiveIntegerField(null= True, blank= True)#numero de telefono
@@ -36,6 +37,9 @@ class pedidos(models.Model):
     def __str__(self):
         return self.nombre
 
+
+    def __str__(self):
+        return f"{self.nombre} - {self.token}"
 
 class categoria(models.Model):
     nombre_categoria = models.CharField(max_length=120)
