@@ -6,7 +6,7 @@ class Form_pedido(forms.ModelForm):
     class Meta:
         model = pedidos
         fields = '__all__'
-        exclude = ('recibido_de', 'estado_seguimiento','estado_pago', 'token')
+        exclude = ('recibido_de', 'estado_de_seguimiento','estado_de_pago', 'token')
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Escribe tu nombre'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'correo@correo.com'}),

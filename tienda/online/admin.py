@@ -3,8 +3,8 @@ from online.models import pedidos, categoria, producto, insumos
 # Register your models here.
 
 class pedidosAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'email', 'telefono', 'descripcion', 'producto_ref', 'recibido_de', 'fecha', 'estado_pago', 'estado_seguimiento']
-    list_filter= ['estado_pago', 'estado_seguimiento']
+    list_display = ['nombre', 'email', 'telefono', 'descripcion', 'producto_ref', 'recibido_de', 'fecha', 'estado_de_pago', 'estado_de_seguimiento']
+    list_filter= ['estado_de_pago', 'estado_de_seguimiento']
     search_fields= ['nombre','email']
     def producto_ref (self,obj):
         if obj. roducto.ref:

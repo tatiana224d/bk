@@ -129,6 +129,18 @@
                                     </div>
                                 </div>
 
+                                <!-- estado de pedido y pago-->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Estado del pedido</h6>
+                                        <code class="bg-light p-2 d-block rounded">{{nuevo_pedido.estado_seguimiento }}</code>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Estado de pago</h6>
+                                        <code class="bg-light p-2 d-block rounded">{{ nuevo_pedido.estado_pago }}</code>
+                                    </div>
+                                </div>
+
                                 <!-- Imagen del producto -->
                                 {% if pedido.producto_ref %}
                                     <div class="mb-4">

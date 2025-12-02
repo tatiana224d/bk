@@ -30,8 +30,8 @@ class pedidos(models.Model):
         ('PAG' , 'PAGADO'),
     ]
     
-    estado_seguimiento = models.CharField(max_length=3, choices= estado_pedidos, default="SOL" )
-    estado_pago = models.CharField(max_length=3, choices= estado_pago, default="PEN")
+    estado_de_seguimiento = models.CharField(max_length=3, choices= estado_pedidos, default="SOL" )
+    estado_de_pago = models.CharField(max_length=3, choices= estado_pago, default="PEN")
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
