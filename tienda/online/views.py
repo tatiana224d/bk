@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
 from django.core.paginator import Paginator
-import uuid
 # Create your views here.
 
 def index(request):
@@ -40,8 +39,8 @@ from .models import pedidos
 
 def cancelar_pedido(request, token):
     try:
-        pedido = Pedido.objects.get(token=token)
-    except Pedido.DoesNotExist:
+        pedido = pedidos.objects.get(token=token)
+    except pedidos.DoesNotExist:
         messages.error(request, "No se encontró el pedido.")
         return redirect('seguimiento')
 
@@ -53,9 +52,6 @@ def cancelar_pedido(request, token):
         messages.success(request, "El pedido fue cancelado con éxito.")
 
     return redirect('seguimiento', token=token)
-
-
-
 
 
 def detalle_producto(request, id):
