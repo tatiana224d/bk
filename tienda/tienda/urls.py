@@ -10,8 +10,9 @@ from online import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('pedido/', views.pedido),
+    path('pedido/', views.pedido, name='pedido'),
     path('producto/<int:id>/', views.detalle_producto, name='detalle_producto'),
+    path('seguimiento/', views.seguimiento, name='seguimiento'),
 ]
 
 if settings.DEBUG:

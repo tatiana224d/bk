@@ -1,28 +1,30 @@
 from django.db import models
+from django.utils import timezone
 import uuid
 
-# Create your models here.  28:42
+# Create your models here.
 
 class pedidos(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('procesando', 'Procesando'),
+        ('completado', 'Completado'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
     nombre = models.CharField(max_length=120)
-    email =models.CharField(max_length=120)
-    telefono =models.PositiveIntegerField(blank=True) #numero de telefono
-    token=models.CharField(max_length=120, default=uuid.uuid4) #token de pago
-    descripcion=models.TextField(max_length=120, blank=True)
-    producto_ref =models.ImageField(blank= False) #imagen de producto de referencia
-    recibido_de = models.CharField(max_length=120) #wsp, o presencial
-    fecha=models.DateField() #fecha para la que se necesita el producto
-
-    def seguimiento(request,render):
-        token=request.GET.get('token')
-        try:
-            pedido=pedidos.objects.get(token=token)
-            return render (request, 'seguimiento.html', {'pedido': pedido})
-        except pedidos.DoesNotExist:
-            return render (request, 'seguimiento.html', {'error': 'Pedido no encontrado'})
+    email = models.CharField(max_length=120)
+    telefono = models.PositiveIntegerField(blank=True)
+    token = models.CharField(max_length=120, default=uuid.uuid4, unique=True)
+    descripcion = models.TextField(max_length=120, blank=True)
+    producto_ref = models.ImageField(blank=False, upload_to='pedido_images/')
+    recibido_de = models.CharField(max_length=120)
+    fecha = models.DateField()
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} - {self.token}"
     
 class categoria(models.Model):
     nombre_categoria = models.CharField(max_length=120)

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from online.models import pedidos, categoria, producto, insumos
-from django.utils.html import format_html
 # Register your models here.
 
 class pedidosAdmin(admin.ModelAdmin):
@@ -21,4 +20,5 @@ admin.site.register(pedidos, pedidosAdmin)
 admin.site.register(categoria, categoriaAdmin)
 admin.site.register(producto, productoAdmin)
 admin.site.register(insumos, insumosAdmin)
+
 

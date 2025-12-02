@@ -1,0 +1,173 @@
+<!doctype html>
+{% load static %}
+<html lang="es">
+    <head>
+        <title>Seguimiento de Pedido</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <style>
+            .estado-badge {
+                font-size: 1.2rem;
+                padding: 0.5rem 1rem;
+            }
+            .estado-pendiente { background-color: #ffc107; color: black; }
+            .estado-procesando { background-color: #17a2b8; color: white; }
+            .estado-completado { background-color: #28a745; color: white; }
+            .estado-cancelado { background-color: #dc3545; color: white; }
+            .timeline-marker {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: inline-block;
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+
+    <body class="bg-light">
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">🔍 Seguimiento de Pedidos</span>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container mt-5 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <!-- Formulario de búsqueda -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Buscar tu pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="GET" class="d-flex gap-2">
+                                <input
+                                    type="text"
+                                    name="token"
+                                    class="form-control"
+                                    placeholder="Ingresa tu token de seguimiento"
+                                    value="{{ token }}"
+                                    required
+                                />
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje de error -->
+                    {% if error %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>⚠️ Aviso:</strong> {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+
+                    <!-- Detalles del pedido -->
+                    {% if pedido %}
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">✅ Pedido Encontrado</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Estado -->
+                                <div class="mb-4">
+                                    <h6 class="text-muted">Estado del Pedido</h6>
+                                    <span class="badge estado-badge estado-{{ pedido.estado }}">
+                                        {{ pedido.get_estado_display|upper }}
+                                    </span>
+                                </div>
+
+                                <!-- Información personal -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Nombre</h6>
+                                        <p class="h5">{{ pedido.nombre }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Email</h6>
+                                        <p class="h5">{{ pedido.email }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Teléfono y origen -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Teléfono</h6>
+                                        <p class="h5">{{ pedido.telefono|default:"No especificado" }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Recibido por</h6>
+                                        <p class="h5">{{ pedido.recibido_de }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Descripción -->
+                                <div class="mb-4">
+                                    <h6 class="text-muted">Descripción del Pedido</h6>
+                                    <p class="border-start border-3 border-primary ps-3">
+                                        {{ pedido.descripcion|default:"Sin descripción" }}
+                                    </p>
+                                </div>
+
+                                <!-- Fecha de entrega -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Fecha de Entrega</h6>
+                                        <p class="h5">{{ pedido.fecha|date:"d/m/Y" }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted">Fecha de Creación</h6>
+                                        <p class="h5">{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Imagen del producto -->
+                                {% if pedido.producto_ref %}
+                                    <div class="mb-4">
+                                        <h6 class="text-muted">Referencia del Producto</h6>
+                                        <img
+                                            src="{{ pedido.producto_ref.url }}"
+                                            class="img-fluid rounded"
+                                            alt="Producto de referencia"
+                                            style="max-height: 300px; object-fit: cover;"
+                                        />
+                                    </div>
+                                {% endif %}
+
+                                <!-- Token -->
+                                <div class="mb-4">
+                                    <h6 class="text-muted">Token de Seguimiento</h6>
+                                    <code class="bg-light p-2 d-block rounded">{{ pedido.token }}</code>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones de acción -->
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-secondary">← Volver al Catálogo</a>
+                        <a href="{% url 'pedido' %}" class="btn btn-primary">Hacer un Pedido</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-dark text-white text-center py-3 mt-5">
+            <p class="mb-0">© 2025 Tu Tienda Online - Seguimiento de Pedidos</p>
+        </footer>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9ODOCWtVuOfMpv2XoalzR6dRYeGVYnLfMRp8dVQj0hW05Wz9MHV0nYvMH"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
