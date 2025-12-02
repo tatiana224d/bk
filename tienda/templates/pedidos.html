@@ -20,22 +20,31 @@
 
     <body class="container mt-3">
         <header>
-            <div class="alert alert-info display-5 text-center" role="alert">
+            <div class="alert alert-info display-5 text-center">
             Solicitud de pedido
             </div>
 
         </header>
         <main>
 
-            <form method="post" enctype="multipart/form-data">
->
-                {% csrf_token %}
-                {{form.as_p}}
+            <div class="container d-flex justify-content-center">
+                <div class="col-6">
+                    <div class="alert alert-info">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.errors }}
+                                </div>
+                            {% endif %}
 
-                <a class = "btn btn-primary mt-3" href="/" role="button">Cancelar</a>
-                <button type="submit" class="btn btn-danger float-end mt-3">Enviar solicitud</button> 
-            </form>
-
+                            {{form.as_p}}
+                            <a class = "btn btn-primary mt-3" href="/" role="button">Cancelar</a>
+                            <button type="submit" class="btn btn-danger float-end mt-3">Pagar pedido</button> 
+                        </form>
+                    </div>
+                </div> 
+            </div>
         
         </main>
         <footer>

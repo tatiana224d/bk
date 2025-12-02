@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from online.models import pedidos
 from online.models import categoria
 from online.forms import Form_pedido
@@ -10,11 +10,17 @@ def index(request):
     return render(request, "index.html", data)
 
 def pedido(request):
-    if request.method == "post":
-        form= Form_pedido(request.post, request.FILES)
+    if request.method == "POST":
+        form= Form_pedido(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return pedidos(request)
+            nuevo_pedido = form.save(commit=False)
+
+            nuevo_pedido.recibido_de= 'Pagina Web'
+            nuevo_pedido.estado_seguimiento= 'SOL'
+            nuevo_pedido.estado_pago= 'PEN'
+
+            nuevo_pedido.save()
+            return redirect ('pedido')
     else:
         form = Form_pedido()
 

@@ -4,8 +4,14 @@ from django.utils.html import format_html
 # Register your models here.
 
 class pedidosAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'email', 'telefono', 'descripcion', 'producto_ref', 'recibido_de', 'fecha']
-
+    list_display = ['nombre', 'email', 'telefono', 'descripcion', 'producto_ref', 'recibido_de', 'fecha', 'estado_pago', 'estado_seguimiento']
+    list_filter= ['estado_pago', 'estado_seguimiento']
+    search_fields= ['nombre','email']
+    def producto_ref (self,obj):
+        if obj. roducto.ref:
+            return format_html('<img src="{}" width="100" height="100" />', obj.producto_ref.url)
+        return "Sin imagen"
+    
 class categoriaAdmin(admin.ModelAdmin):
     list_display = ['nombre_categoria', 'slug']
     prepopulated_fields = {'slug': ('nombre_categoria',)}

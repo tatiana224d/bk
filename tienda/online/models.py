@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 # Create your models here.  28:42
@@ -6,16 +7,36 @@ from django.db import models
 class pedidos(models.Model):
     nombre = models.CharField(max_length=120)
     email =models.CharField(max_length=120)
-    telefono =models.PositiveIntegerField(blank=True) #numero de telefono
-
+    telefono =models.PositiveIntegerField(null= True, blank= True)#numero de telefono
     descripcion=models.TextField(max_length=120, blank=True)
-    producto_ref =models.ImageField(blank= False) #imagen de producto de referencia
+    producto_ref =models.ImageField(upload_to="media/", blank=True) #imagen de producto de referencia
     recibido_de = models.CharField(max_length=120) #wsp, o presencial
+    fecha=models.DateField(null=True) #fecha para la que se necesita el producto
 
-    fecha=models.DateField() #fecha para la que se necesita el producto
+#ESTADOS
+    estado_pedidos = [
+        ('SOL', 'SOLICITADO'),
+        ('APR', 'APROBADO'),
+        ('EN', 'EN PROCESO'),
+        ('REA', 'REALIZADO'),
+        ('FIN', 'FINALIZADO'),
+        ('ENT', 'ENTREGADO'),
+    ]
+    
+    estado_pago = [
+        ('PEN' , 'PENDIENTE'),
+        ('PAR', 'PARCIAL'),
+        ('PAG' , 'PAGADO'),
+    ]
+    
+    estado_seguimiento = models.CharField(max_length=3, choices= estado_pedidos, default="SOL" )
+    estado_pago = models.CharField(max_length=3, choices= estado_pago, default="PEN")
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
     def __str__(self):
         return self.nombre
-    
+
+
 class categoria(models.Model):
     nombre_categoria = models.CharField(max_length=120)
     slug=models.SlugField()
