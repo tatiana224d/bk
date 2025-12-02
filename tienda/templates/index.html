@@ -30,15 +30,19 @@
             {% for producto in productos %}
                 <div class="col">
                     <div class="card h-100">
-                        <img
-                            src="{{ producto.imagen_producto.url }}"
-                            class="card-img-top"
-                            alt="{{ producto.nombre_producto }}"
-                        />
+                        {% if producto.imagen_producto %}
+                            <img src="{{ producto.imagen_producto.url }}" class="card-img-top" alt="{{ producto.nombre_producto }}" style="height: 200px; object-fit: cover;" />
+                        {% else %}
+                            <div class="card-img-top text-center py-5 bg-light" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <span>Sin imagen disponible</span>
+                            </div>
+                        {% endif %}
+                        
                         <div class="card-body">
                             <h5 class="card-title">{{ producto.nombre_producto }}</h5>
                             <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
                             <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
+                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-primary">Ver Detalles</a>
                         </div> 
                     </div>
                 </div>      

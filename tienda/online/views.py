@@ -22,3 +22,8 @@ def pedido(request):
     data = {'form': form,
             'pedido': pedido}
     return render(request, "pedidos.html", data)
+
+def detalle_producto(request, id):
+    producto_detalle = producto.objects.get(id=id)
+    data = {'producto': producto_detalle}
+    return render(request, "detalle_producto.html", data)

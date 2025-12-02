@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
     path('pedido/', views.pedido),
+    path('producto/<int:id>/', views.detalle_producto, name='detalle_producto'),
 ]
 
 if settings.DEBUG:
