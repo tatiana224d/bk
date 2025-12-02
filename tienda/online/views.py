@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from online.models import pedidos
-from online.models import categoria
+from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
 # Create your views here.
 
 def index(request):
-    categorias= categoria.objects.all()
-    data = {'categorias': categorias}
+    productos = producto.objects.all()
+    categorias = categoria.objects.all()
+    data = {'productos': productos, 'categorias': categorias}
     return render(request, "index.html", data)
 
 def pedido(request):

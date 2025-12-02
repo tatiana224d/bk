@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 # Create your models here.  28:42
 
@@ -7,12 +7,20 @@ class pedidos(models.Model):
     nombre = models.CharField(max_length=120)
     email =models.CharField(max_length=120)
     telefono =models.PositiveIntegerField(blank=True) #numero de telefono
-
+    token=models.CharField(max_length=120, default=uuid.uuid4) #token de pago
     descripcion=models.TextField(max_length=120, blank=True)
     producto_ref =models.ImageField(blank= False) #imagen de producto de referencia
     recibido_de = models.CharField(max_length=120) #wsp, o presencial
-
     fecha=models.DateField() #fecha para la que se necesita el producto
+
+    def seguimiento(request,render):
+        token=request.GET.get('token')
+        try:
+            pedido=pedidos.objects.get(token=token)
+            return render (request, 'seguimiento.html', {'pedido': pedido})
+        except pedidos.DoesNotExist:
+            return render (request, 'seguimiento.html', {'error': 'Pedido no encontrado'})
+
     def __str__(self):
         return self.nombre
     

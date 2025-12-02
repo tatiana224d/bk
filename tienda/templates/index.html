@@ -28,20 +28,20 @@
         {% if productos %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for producto in productos %}
-            <div class="col">
-                <div class="card h-100">
-                    <img
-                        src="{{ producto.imagen_producto.url }}"
-                        class="card-img-top"
-                        alt="{{ producto.nombre_producto }}"
-                    />
-                    <div class="card-body">
-                        <h5 class="card-title">{{ producto.nombre_producto }}</h5>
-                        <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
-                        <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
-                    </div> 
-                </div>
-            </div>      
+                <div class="col">
+                    <div class="card h-100">
+                        <img
+                            src="{{ producto.imagen_producto.url }}"
+                            class="card-img-top"
+                            alt="{{ producto.nombre_producto }}"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                            <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
+                            <p class="card-text">Categoría: {{ producto.categoria.nombre_categoria }}</p>
+                        </div> 
+                    </div>
+                </div>      
             {% endfor %} 
         </div>
         {% else %}     
@@ -50,10 +50,10 @@
         <a
             name=""
             id=""
-            class="btn btn-primary"
-            href="#"
+            class="btn btn-primary mt-3"
+            href="pedido/"
             role="button"
-            >Button</a
+            >Pedidos</a
         >
         
 
