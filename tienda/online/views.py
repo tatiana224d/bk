@@ -21,8 +21,8 @@ def pedido(request):
             nuevo_pedido = form.save(commit=False)
 
             nuevo_pedido.recibido_de= 'Pagina Web'
-            nuevo_pedido.estado_seguimiento= 'SOL'
-            nuevo_pedido.estado_pago= 'PEN'
+            nuevo_pedido.estado_de_seguimiento= 'SOL'
+            nuevo_pedido.estado_de_pago= 'PEN'
 
             nuevo_pedido.save()
             return redirect ('seguimiento', token=nuevo_pedido.token)
