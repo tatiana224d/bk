@@ -3,6 +3,7 @@ from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.db import models
 # Create your views here.
 
 def index(request):
@@ -34,7 +35,36 @@ def pedido(request):
             'pedido': pedido}
     return render(request, "pedidos.html", data)
 
+def reportes_view(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')    
 
+    pedido_query = pedidos.objects.all()
+    if fecha_inicio and fecha_fin:
+        pedido_query = pedido_query.filter(fecha__range=[fecha_inicio, fecha_fin])
+
+    total_pedidos = pedido_query.count()
+    pedidos_por_estado = pedido_query.values('estado_de_seguimiento').annotate(total=models.Count('id')).order_by('estado_de_seguimiento')
+    pedidos_por_pago = pedido_query.values('estado_de_pago').annotate(total=models.Count('id')).order_by('estado_de_pago')
+    
+    # Contar por tipo de pago
+    pendientes = pedido_query.filter(estado_de_pago='PEN').count()
+    pagados = pedido_query.filter(estado_de_pago='PAG').count()
+    parciales = pedido_query.filter(estado_de_pago='PAR').count()
+
+    reporte = {
+        'total_pedidos': total_pedidos,
+        'pedidos_por_estado': list(pedidos_por_estado),
+        'pedidos_por_pago': list(pedidos_por_pago),
+        'pendientes': pendientes,
+        'pagados': pagados,
+        'parciales': parciales,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin
+    }
+
+    return render(request, "reportes.html", {'reporte': reporte})
+   
 def pedidos_view(request):
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
