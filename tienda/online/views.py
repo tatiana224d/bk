@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
 from django.core.paginator import Paginator
-import uuid
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
@@ -34,9 +34,13 @@ def pedido(request):
             'pedido': pedido}
     return render(request, "pedidos.html", data)
 
+def pedidos_view(request):
+    pedidos_list = pedidos.objects.all()
+    data = {'pedidos': list(pedidos_list.values('id','token','estado_de_pago','estado_de_seguimiento'))}
+    return JsonResponse(data)
 
 from django.contrib import messages
-from .models import pedidos
+from .models import pedidos as Pedido
 
 def cancelar_pedido(request, token):
     try:
@@ -45,10 +49,10 @@ def cancelar_pedido(request, token):
         messages.error(request, "No se encontró el pedido.")
         return redirect('seguimiento')
 
-    if pedido.estado == "Cancelado":
+    if pedido.estado_de_seguimiento == "FIN":
         messages.warning(request, "El pedido ya estaba cancelado.")
     else:
-        pedido.estado = "Cancelado"
+        pedido.estado_de_seguimiento = "FIN"
         pedido.save()
         messages.success(request, "El pedido fue cancelado con éxito.")
 

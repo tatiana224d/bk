@@ -17,6 +17,7 @@ urlpatterns = [
     path('seguimiento/<uuid:token>/', views.seguimiento, name='seguimiento'),
 
     path('cancelar/<uuid:token>/', views.cancelar_pedido, name='cancelar_pedido'),
+    path('pedidos/', views.pedidos_view, name='pedidos_api'),
 ]   
 
 if settings.DEBUG:
