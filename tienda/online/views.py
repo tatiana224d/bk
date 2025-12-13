@@ -34,10 +34,35 @@ def pedido(request):
             'pedido': pedido}
     return render(request, "pedidos.html", data)
 
+
 def pedidos_view(request):
-    pedidos_list = pedidos.objects.all()
-    data = {'pedidos': list(pedidos_list.values('id','token','estado_de_pago','estado_de_seguimiento'))}
-    return JsonResponse(data)
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    estados = request.GET.getlist('estados')
+    max_resultados = request.GET.get('max_resultados')
+
+    pedidos_filtrados = pedidos.objects.all()
+
+    if fecha_inicio and fecha_fin:
+        pedidos_filtrados = pedidos_filtrados.filter(fecha__range=[fecha_inicio, fecha_fin])
+
+    if estados:
+        pedidos_filtrados = pedidos_filtrados.filter(estado_de_seguimiento__in=estados)
+
+    if max_resultados:
+        pedidos_filtrados = pedidos_filtrados[:int(max_resultados)]
+
+    resultados = [
+        {
+            'id': pedido.id,
+            'token': str(pedido.token),
+            'estado_de_seguimiento': pedido.estado_de_seguimiento,
+            'fecha': str(pedido.fecha),
+        }
+        for pedido in pedidos_filtrados
+    ]
+
+    return JsonResponse({'pedidos': resultados})
 
 from django.contrib import messages
 from .models import pedidos as Pedido
