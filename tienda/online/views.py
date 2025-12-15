@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.db import models
 
+
 # Create your views here.
 
 def index(request):
@@ -137,4 +138,26 @@ def seguimiento(request, token=None):
     
     data = {'pedido': pedido_detalle, 'error': error, 'token': token}
     return render(request, "seguimiento.html", data)
+
+###################
+#API INSUMO
+from .serializers import InsumosSerializer
+from .models import insumos
+from rest_framework import viewsets
+
+class InsumosViewSet(viewsets.ModelViewSet):
+    queryset=insumos.objects.all().order_by('nombre_insumo')
+    serializer_class=InsumosSerializer
+
+#API PEDIDOS
+from rest_framework import generics
+from .serializers import PedidosSerializer
+
+class Crear_Pedido(generics.CreateAPIView):
+    queryset=pedidos.objects.all()
+    serializer_class= PedidosSerializer
+
+class Modificar_Pedido(generics.UpdateAPIView):
+    queryset=pedidos.objects.all()
+    serializer_class= PedidosSerializer
 

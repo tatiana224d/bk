@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 import uuid
@@ -20,6 +20,19 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+##API INSUMO
+from online.views import InsumosViewSet
+from rest_framework.routers import DefaultRouter
+
+router= DefaultRouter()
+router.register('insumos', views.InsumosViewSet)
+
+urlpatterns +=[
+    path('api/', include(router.urls)),
+    path('api/pedidos/', views.Crear_Pedido.as_view(),name='pedido-crear'),
+    path('api/pedidos/<int:pk>/', views.Modificar_Pedido.as_view(), name='pedido-modificar'),
+]
 
 
 
