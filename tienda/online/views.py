@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
 from django.core.paginator import Paginator
+
+from django.http import JsonResponse
+from django.db import models
+
 # Create your views here.
 
 def index(request):
@@ -20,8 +24,8 @@ def pedido(request):
             nuevo_pedido = form.save(commit=False)
 
             nuevo_pedido.recibido_de= 'Pagina Web'
-            nuevo_pedido.estado_seguimiento= 'SOL'
-            nuevo_pedido.estado_pago= 'PEN'
+            nuevo_pedido.estado_de_seguimiento= 'SOL'
+            nuevo_pedido.estado_de_pago= 'PEN'
 
             nuevo_pedido.save()
             return redirect ('seguimiento', token=nuevo_pedido.token)
@@ -33,9 +37,67 @@ def pedido(request):
             'pedido': pedido}
     return render(request, "pedidos.html", data)
 
+def reportes_view(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')    
+
+    pedido_query = pedidos.objects.all()
+    if fecha_inicio and fecha_fin:
+        pedido_query = pedido_query.filter(fecha__range=[fecha_inicio, fecha_fin])
+
+    total_pedidos = pedido_query.count()
+    pedidos_por_estado = pedido_query.values('estado_de_seguimiento').annotate(total=models.Count('id')).order_by('estado_de_seguimiento')
+    pedidos_por_pago = pedido_query.values('estado_de_pago').annotate(total=models.Count('id')).order_by('estado_de_pago')
+    
+    # Contar por tipo de pago
+    pendientes = pedido_query.filter(estado_de_pago='PEN').count()
+    pagados = pedido_query.filter(estado_de_pago='PAG').count()
+    parciales = pedido_query.filter(estado_de_pago='PAR').count()
+
+    reporte = {
+        'total_pedidos': total_pedidos,
+        'pedidos_por_estado': list(pedidos_por_estado),
+        'pedidos_por_pago': list(pedidos_por_pago),
+        'pendientes': pendientes,
+        'pagados': pagados,
+        'parciales': parciales,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin
+    }
+
+    return render(request, "reportes.html", {'reporte': reporte})
+
+def pedidos_view(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    estados = request.GET.getlist('estados')
+    max_resultados = request.GET.get('max_resultados')
+
+    pedidos_filtrados = pedidos.objects.all()
+
+    if fecha_inicio and fecha_fin:
+        pedidos_filtrados = pedidos_filtrados.filter(fecha__range=[fecha_inicio, fecha_fin])
+
+    if estados:
+        pedidos_filtrados = pedidos_filtrados.filter(estado_de_seguimiento__in=estados)
+
+    if max_resultados:
+        pedidos_filtrados = pedidos_filtrados[:int(max_resultados)]
+
+    resultados = [
+        {
+            'id': pedido.id,
+            'token': str(pedido.token),
+            'estado_de_seguimiento': pedido.estado_de_seguimiento,
+            'fecha': str(pedido.fecha),
+        }
+        for pedido in pedidos_filtrados
+    ]
+
+    return JsonResponse({'pedidos': resultados})
 
 from django.contrib import messages
-from .models import pedidos
+from .models import pedidos as Pedido
 
 def cancelar_pedido(request, token):
     try:
@@ -44,10 +106,10 @@ def cancelar_pedido(request, token):
         messages.error(request, "No se encontró el pedido.")
         return redirect('seguimiento')
 
-    if pedido.estado == "Cancelado":
+    if pedido.estado_de_seguimiento == "FIN":
         messages.warning(request, "El pedido ya estaba cancelado.")
     else:
-        pedido.estado = "Cancelado"
+        pedido.estado_de_seguimiento = "FIN"
         pedido.save()
         messages.success(request, "El pedido fue cancelado con éxito.")
 

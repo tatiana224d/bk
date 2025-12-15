@@ -11,12 +11,11 @@ urlpatterns = [
     path('', views.index),
     path('pedido/', views.pedido, name='pedido'),
     path('producto/<int:id>/', views.detalle_producto, name='detalle_producto'),
-
     path('seguimiento/', views.seguimiento, name='seguimiento_search'),
-
     path('seguimiento/<uuid:token>/', views.seguimiento, name='seguimiento'),
-
     path('cancelar/<uuid:token>/', views.cancelar_pedido, name='cancelar_pedido'),
+    path('api/pedidos/filtrar/', views.pedidos_view, name='pedidos_filtrar'),
+    path('reportes/', views.reportes_view, name='reportes'),
 ]   
 
 if settings.DEBUG:
