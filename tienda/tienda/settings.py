@@ -19,7 +19,7 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tk-)1(hx5w-uri14d(w%790mscy^c#p9bput2e&vbd!pp6f2#s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
