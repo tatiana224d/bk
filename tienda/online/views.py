@@ -1,3 +1,4 @@
+'pip install djangorestframework'
 from django.shortcuts import render, redirect
 from online.models import pedidos, categoria, producto
 from online.forms import Form_pedido
