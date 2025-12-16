@@ -125,3 +125,18 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
+
+
+
+import os
+
+if os.environ.get("RENDER") == "true":
+    from django.contrib.auth.models import User
+    try:
+        User.objects.create_superuser(
+            username="admin",
+            email="admin@admin.com",
+            password="admin123"
+        )
+    except:
+        pass
